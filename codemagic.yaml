@@ -5,9 +5,9 @@ workflows:
     environment:
       vars:
         JAVA_VERSION: 17
+      android:
+        image: latest
     scripts:
-      - name: Install Gradle
-        script: sdk install gradle 8.2
       - name: Setup Gradle
         script: |
           chmod +x gradlew
