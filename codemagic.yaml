@@ -6,11 +6,12 @@ workflows:
       vars:
         JAVA_VERSION: 17
     scripts:
-      - name: Setup Gradle
-        script: |
-          chmod +x gradlew
-          ./gradlew wrapper
-          ./gradlew dependencies
+  - name: Setup Gradle
+    script: |
+      #!/bin/sh
+      chmod +x ./gradlew
+      ./gradlew wrapper
+      ./gradlew dependencies
       - name: Build APK
         script: ./gradlew assembleDebug
     artifacts:
