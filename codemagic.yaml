@@ -5,8 +5,6 @@ workflows:
     environment:
       vars:
         JAVA_VERSION: 17
-      android:
-        image: latest
     scripts:
       - name: Setup Gradle
         script: |
