@@ -3,10 +3,9 @@ workflows:
     name: Android APK Build
     max_build_duration: 60
     environment:
-      android:
-        image: latest
-      kotlin: 1.8.22
-      java: 17
+      vars:
+        JAVA_VERSION: 17
+      flutter: stable
     scripts:
       - name: Setup Gradle
         script: |
