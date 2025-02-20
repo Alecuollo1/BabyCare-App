@@ -5,33 +5,40 @@ workflows:
     environment:
       vars:
         JAVA_VERSION: 17
+        
     scripts:
-      - name: Clean and Download Gradle
+      - name: Clean Gradle Wrapper
         script: |
-          rm -rf ./gradle/wrapper
-          rm -rf ./gradle-7.6-bin.zip
-          curl -L https://services.gradle.org/distributions/gradle-7.6-bin.zip -o gradle-7.6-bin.zip
-          unzip gradle-7.6-bin.zip
-          mkdir -p ./gradle/wrapper
-          cp ./gradle-7.6/lib/plugins/gradle-wrapper-7.6.jar ./gradle/wrapper/gradle-wrapper.jar
-          cp ./gradle-7.6/lib/*.jar ./gradle/wrapper/
-          cp ./gradle-7.6/bin/gradle ./gradlew
+          echo "Cleaning old Gradle wrapper..."
+          rm -f ./gradle/wrapper/gradle-wrapper.jar
+          rm -rf ./gradle/caches/
+          rm -rf ./app/build/
+          echo "Pulizia completata."
+
+      - name: Download Gradle Wrapper
+        script: |
+          echo "Scaricamento di Gradle wrapper versione 7.6..."
+          ./gradlew wrapper --gradle-version 7.6
+          echo "Download completato."
+        
+      - name: Fix Permissions
+        script: |
+          echo "Impostazione permessi..."
           chmod +x ./gradlew
-          chmod -R +x ./gradle/wrapper/
-          ls -la ./gradle/wrapper/
-      - name: Update gradle-wrapper.properties
-        script: |
-          echo "distributionBase=GRADLE_USER_HOME" > ./gradle/wrapper/gradle-wrapper.properties
-          echo "distributionPath=wrapper/dists" >> ./gradle/wrapper/gradle-wrapper.properties
-          echo "zipStoreBase=GRADLE_USER_HOME" >> ./gradle/wrapper/gradle-wrapper.properties
-          echo "zipStorePath=wrapper/dists" >> ./gradle/wrapper/gradle-wrapper.properties
-          echo "distributionUrl=https\://services.gradle.org/distributions/gradle-7.6-bin.zip" >> ./gradle/wrapper/gradle-wrapper.properties
+          chmod +x ./gradle/wrapper/gradle-wrapper.jar
+          echo "Permessi impostati correttamente."
+        
       - name: Setup Gradle
         script: |
-          ./gradlew wrapper --gradle-version 7.6
+          echo "Configurazione di Gradle..."
           ./gradlew dependencies
+          echo "Configurazione completata."
+
       - name: Build APK
         script: |
+          echo "Avvio build APK..."
           ./gradlew assembleDebug
+          echo "Build APK completata."
+
     artifacts:
       - app/build/outputs/**/*.apk
