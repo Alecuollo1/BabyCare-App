@@ -56,8 +56,11 @@ workflows:
           find . -name "*.apk" -exec cp {} build/artifacts/ \;
           echo "APKs spostati in build/artifacts/"
 
+      - name: Verifica File APK in Artifacts
+        script: |
+          echo "Verifica di tutti i file APK in build/artifacts/..."
+          ls -la build/artifacts/
+          echo "Verifica completata."
+
     artifacts:
       - "build/artifacts/**/*.apk"
-      - "app/build/outputs/**/*.apk"
-      - "**/outputs/**/*.apk"
-      - "**/*.apk"
