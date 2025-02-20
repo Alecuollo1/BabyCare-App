@@ -41,4 +41,4 @@ workflows:
           echo "Build APK completata."
 
      artifacts:
-  - app/build/outputs/apk/debug/app-debug.apk
+  - build/**/*.apk
