@@ -9,7 +9,6 @@ workflows:
       - name: Setup Gradle
         script: |
           chmod +x ./gradlew
-          chmod +x ./gradle/wrapper/gradle-wrapper.jar
           ./gradlew wrapper
           ./gradlew dependencies
       - name: Build APK
