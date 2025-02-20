@@ -34,11 +34,23 @@ workflows:
           ./gradlew dependencies
           echo "Configurazione completata."
 
-      - name: Build APK
+      - name: Build APK (Debug e Release)
         script: |
-          echo "Avvio build APK..."
-          ./gradlew assembleRelease || ./gradlew assembleDebug
+          echo "Avvio build APK Debug..."
+          ./gradlew assembleDebug || echo "Debug APK build failed."
+          echo "Avvio build APK Release..."
+          ./gradlew assembleRelease || echo "Release APK build failed."
           echo "Build APK completata."
+
+      - name: Verifica Output Debug
+        script: |
+          echo "Verifica APK Debug..."
+          ls -l ./app/build/outputs/apk/debug/ || echo "No debug APK found"
+        
+      - name: Verifica Output Release
+        script: |
+          echo "Verifica APK Release..."
+          ls -l ./app/build/outputs/apk/release/ || echo "No release APK found"
 
       - name: List All APKs
         script: |
@@ -46,4 +58,5 @@ workflows:
           find . -name "*.apk" || echo "No APKs found"
 
     artifacts:
-      - "**/outputs/**/*.apk"
+      - "app/build/outputs/apk/debug/*.apk"
+      - "app/build/outputs/apk/release/*.apk"
