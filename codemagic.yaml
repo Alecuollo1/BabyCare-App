@@ -5,11 +5,12 @@ workflows:
     environment:
       vars:
         JAVA_VERSION: 17
-
+        GRADLE_VERSION: 7.6
+        
     scripts:
       - name: Clean Gradle Wrapper
         script: |
-          echo "Pulizia di Gradle Wrapper..."
+          echo "Pulizia vecchio Gradle wrapper..."
           rm -f ./gradle/wrapper/gradle-wrapper.jar
           rm -rf ~/.gradle/caches/
           rm -rf ./app/build/
@@ -17,17 +18,17 @@ workflows:
 
       - name: Download Gradle Wrapper
         script: |
-          echo "Scaricamento di Gradle Wrapper versione 7.6..."
-          ./gradlew wrapper --gradle-version 7.6
+          echo "Scaricamento di Gradle wrapper versione ${GRADLE_VERSION}..."
+          ./gradlew wrapper --gradle-version ${GRADLE_VERSION}
           echo "Download completato."
-
+        
       - name: Fix Gradle Wrapper Permissions
         script: |
-          echo "Impostazione permessi per Gradle Wrapper..."
+          echo "Impostazione permessi per Gradle wrapper..."
           chmod +x ./gradlew
           chmod +x ./gradle/wrapper/gradle-wrapper.jar
           echo "Permessi impostati correttamente."
-
+        
       - name: Setup Gradle
         script: |
           echo "Configurazione di Gradle..."
@@ -37,28 +38,36 @@ workflows:
       - name: Build APK
         script: |
           echo "Avvio build APK..."
-          ./gradlew assembleDebug
-          ./gradlew assembleRelease
+          ./gradlew assembleDebug -PoutputDir=build/outputs/apk
           echo "Build APK completata."
 
       - name: Verifica File APK Generati
         script: |
           echo "Verifica di tutti i file APK generati..."
-          find $PWD -name "*.apk" -print
+          find . -name "*.apk" -print
           echo "Verifica completata."
-
-      - name: Comprimi APK per Pubblicazione
+      
+      - name: Forza Pubblicazione Artifacts
+        script: |
+          echo "Forzando la pubblicazione degli APKs..."
+          mkdir -p build/artifacts/
+          find . -name "*.apk" -exec cp {} build/artifacts/ \;
+          echo "APKs spostati in build/artifacts/"
+      
+      - name: Comprimere APK per Pubblicazione
         script: |
           echo "Comprimo tutti gli APK per la pubblicazione..."
-          mkdir -p $PWD/build/artifacts/
-          find $PWD -name "*.apk" -exec zip $PWD/build/artifacts/all-apks.zip {} +
+          cd build/artifacts
+          zip -r app-release.zip *.apk
+          cd ../..
           echo "Compressione completata."
 
       - name: Verifica ZIP Creato
         script: |
           echo "Verifica del file ZIP creato..."
-          ls -la $PWD/build/artifacts/
+          ls -la build/artifacts/
           echo "Verifica completata."
 
     artifacts:
-      - build/artifacts/all-apks.zip
+      - build/artifacts/app-release.zip
+      - build/artifacts/*.apk
