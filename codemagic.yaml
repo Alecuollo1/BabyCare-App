@@ -1,48 +1,38 @@
 workflows:
-  main:
-    name: Build e Pubblicazione APK
-    max_build_duration: 60
+  android-workflow:
+    name: Build and Publish Android APK
+    instance_type: mac_mini_m1
     environment:
       vars:
         JAVA_VERSION: 17
-      flutter: stable
     scripts:
       - name: Clean Gradle Wrapper
         script: |
-          echo "Pulizia del vecchio Gradle Wrapper..."
           ./gradlew clean
-          echo "Pulizia completata."
-          
-      - name: Fix Gradle Wrapper Permissions
+      - name: Setup Gradle Wrapper Permissions
         script: |
-          echo "Fix dei permessi per il Gradle Wrapper..."
           chmod +x ./gradlew
-          echo "Permessi corretti."
-
       - name: Setup Gradle
         script: |
-          echo "Setup di Gradle..."
-          ./gradlew --version
-          echo "Setup completato."
-
+          ./gradlew dependencies
       - name: Build APK
         script: |
-          echo "Avvio build APK..."
           ./gradlew assembleRelease
-          echo "Build APK completata."
-
       - name: Verifica APK Generati
         script: |
-          echo "Verifica dettagliata di tutti i file APK generati..."
+          echo "Verifica di tutti i file APK generati..."
           find . -name "*.apk" -print
           echo "Verifica completata."
-          
       - name: Sposta APK per Pubblicazione
         script: |
-          echo "Sposto tutti gli APK per la pubblicazione..."
+          echo "Spostando gli APK in build/artifacts/..."
           mkdir -p build/artifacts/
           find . -name "*.apk" -exec cp {} build/artifacts/ \;
           echo "APK spostati in build/artifacts/"
-
+      - name: Verifica APK in Artifacts
+        script: |
+          echo "Verifica degli APK in build/artifacts/..."
+          ls -la build/artifacts/
+          echo "Verifica completata."
     artifacts:
-      - build/artifacts/*.apk
+      - build/artifacts/**/*.apk
