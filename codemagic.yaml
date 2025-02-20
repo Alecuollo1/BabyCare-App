@@ -7,16 +7,20 @@ workflows:
         JAVA_VERSION: 17
       flutter: stable
     scripts:
-      - name: Clean and Setup Gradle
+      - name: Clean and Force Dependencies Download
         script: |
           rm -rf ~/.gradle/caches/
+          rm -rf ~/.gradle/wrapper/
           chmod +x ./gradlew
           ./gradlew clean
+          ./gradlew dependencies --refresh-dependencies
+      - name: Download Fresh Gradle Wrapper
+        script: |
           ./gradlew wrapper --gradle-version 7.6
-          ./gradlew dependencies
+          chmod +x ./gradlew
       - name: Build APK
         script: |
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-build-cache
     artifacts:
       - app/build/outputs/apk/debug/*.apk
     publishing:
