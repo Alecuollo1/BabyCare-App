@@ -14,11 +14,13 @@ workflows:
           rm -rf ~/.gradle/caches/
           echo "Pulizia completata."
 
-      - name: Download Gradle Wrapper
+      - name: Download and Setup Gradle Wrapper
         script: |
           echo "Scaricamento di Gradle wrapper versione 7.6..."
           ./gradlew wrapper --gradle-version 7.6
-          echo "Download completato."
+          chmod +x ./gradlew
+          chmod +x ./gradle/wrapper/gradle-wrapper.jar
+          echo "Download e permessi impostati correttamente."
         
       - name: Fix Gradle Wrapper Permissions
         script: |
@@ -33,9 +35,9 @@ workflows:
           ./gradlew dependencies
           echo "Configurazione completata."
 
-      - name: Clean and Rebuild APK
+      - name: Build APK
         script: |
-          echo "Pulizia e ricostruzione dell'APK..."
+          echo "Avvio build APK..."
           ./gradlew clean
           ./gradlew assembleDebug
           ./gradlew assembleRelease
