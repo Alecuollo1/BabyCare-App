@@ -6,13 +6,19 @@ workflows:
       vars:
         JAVA_VERSION: 17
     scripts:
-      - name: Clean and Setup Gradle
+      - name: Download Gradle Wrapper
         script: |
           rm -rf ./gradle/wrapper
-          ./gradlew wrapper --gradle-version 7.6
+          mkdir -p ./gradle/wrapper
+          curl -L https://services.gradle.org/distributions/gradle-7.6-bin.zip -o gradle-7.6-bin.zip
+          unzip gradle-7.6-bin.zip
+          mv gradle-7.6/lib/plugins/gradle-wrapper-7.6.jar ./gradle/wrapper/gradle-wrapper.jar
           chmod +x ./gradlew
           chmod -R +x ./gradle/wrapper/
           ls -la ./gradle/wrapper/
+      - name: Setup Gradle
+        script: |
+          ./gradlew wrapper
           ./gradlew dependencies
       - name: Build APK
         script: |
