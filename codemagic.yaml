@@ -5,40 +5,21 @@ workflows:
     environment:
       vars:
         JAVA_VERSION: 17
-        
+      flutter: stable
     scripts:
-      - name: Clean Gradle Wrapper
+      - name: Clean and Setup Gradle
         script: |
-          echo "Cleaning old Gradle wrapper..."
-          rm -f ./gradle/wrapper/gradle-wrapper.jar
-          rm -rf ./gradle/caches/
-          rm -rf ./app/build/
-          echo "Pulizia completata."
-
-      - name: Download Gradle Wrapper
-        script: |
-          echo "Scaricamento di Gradle wrapper versione 7.6..."
-          ./gradlew wrapper --gradle-version 7.6
-          echo "Download completato."
-        
-      - name: Fix Permissions
-        script: |
-          echo "Impostazione permessi..."
+          rm -rf ~/.gradle/caches/
           chmod +x ./gradlew
-          chmod +x ./gradle/wrapper/gradle-wrapper.jar
-          echo "Permessi impostati correttamente."
-        
-      - name: Setup Gradle
-        script: |
-          echo "Configurazione di Gradle..."
+          ./gradlew clean
+          ./gradlew wrapper --gradle-version 7.6
           ./gradlew dependencies
-          echo "Configurazione completata."
-
       - name: Build APK
         script: |
-          echo "Avvio build APK..."
           ./gradlew assembleDebug
-          echo "Build APK completata."
-
     artifacts:
-      - app/build/outputs/**/*.apk
+      - app/build/outputs/apk/debug/*.apk
+    publishing:
+      email:
+        recipients:
+          - "alessandro.cuollo01@gmail.com"
