@@ -5,17 +5,40 @@ workflows:
     environment:
       vars:
         JAVA_VERSION: 17
+        
     scripts:
-      - name: Clean and Force Dependencies Download
+      - name: Clean Gradle Wrapper
         script: |
-          rm -rf ~/.gradle/caches/
-          rm -rf ~/.gradle/wrapper/
-          chmod +x ./gradlew
+          echo "Cleaning old Gradle wrapper..."
+          rm -f ./gradle/wrapper/gradle-wrapper.jar
+          rm -rf ./gradle/caches/
+          rm -rf ./app/build/
+          echo "Pulizia completata."
+
+      - name: Download Gradle Wrapper
+        script: |
+          echo "Scaricamento di Gradle wrapper versione 7.6..."
           ./gradlew wrapper --gradle-version 7.6
-          ./gradlew clean
-          ./gradlew dependencies --refresh-dependencies
+          echo "Download completato."
+        
+      - name: Fix Permissions
+        script: |
+          echo "Impostazione permessi..."
+          chmod +x ./gradlew
+          chmod +x ./gradle/wrapper/gradle-wrapper.jar
+          echo "Permessi impostati correttamente."
+        
+      - name: Setup Gradle
+        script: |
+          echo "Configurazione di Gradle..."
+          ./gradlew dependencies
+          echo "Configurazione completata."
+
       - name: Build APK
         script: |
-          ./gradlew assembleRelease
+          echo "Avvio build APK..."
+          ./gradlew assembleDebug
+          echo "Build APK completata."
+
     artifacts:
-      - app/build/outputs/apk/release/app-release.apk
+      - app/build/outputs/**/*.apk
