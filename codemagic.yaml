@@ -43,6 +43,18 @@ workflows:
           ./gradlew assembleRelease
           echo "Build APK completata."
 
+      - name: Trova e Lista APKs
+        script: |
+          echo "Cercando APKs in tutto il progetto..."
+          find . -name "*.apk" -print
+          echo "Se APKs trovati, verranno pubblicati."
+
+      - name: Forza Pubblicazione Artifacts
+        script: |
+          echo "Forzando la pubblicazione degli APKs..."
+          mkdir -p build/artifacts/
+          find . -name "*.apk" -exec cp {} build/artifacts/ \;
+          echo "APKs spostati in build/artifacts/"
+
     artifacts:
-      - build/outputs/apk/debug/*.apk
-      - build/outputs/apk/release/*.apk
+      - build/artifacts/*.apk
