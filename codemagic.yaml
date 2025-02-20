@@ -13,11 +13,19 @@ workflows:
           curl -L https://services.gradle.org/distributions/gradle-7.6-bin.zip -o gradle-7.6-bin.zip
           unzip gradle-7.6-bin.zip
           mkdir -p ./gradle/wrapper
-          cp ./gradle-7.6/bin/gradle ./gradlew
           cp ./gradle-7.6/lib/plugins/gradle-wrapper-7.6.jar ./gradle/wrapper/gradle-wrapper.jar
+          cp ./gradle-7.6/lib/*.jar ./gradle/wrapper/
+          cp ./gradle-7.6/bin/gradle ./gradlew
           chmod +x ./gradlew
           chmod -R +x ./gradle/wrapper/
           ls -la ./gradle/wrapper/
+      - name: Update gradle-wrapper.properties
+        script: |
+          echo "distributionBase=GRADLE_USER_HOME" > ./gradle/wrapper/gradle-wrapper.properties
+          echo "distributionPath=wrapper/dists" >> ./gradle/wrapper/gradle-wrapper.properties
+          echo "zipStoreBase=GRADLE_USER_HOME" >> ./gradle/wrapper/gradle-wrapper.properties
+          echo "zipStorePath=wrapper/dists" >> ./gradle/wrapper/gradle-wrapper.properties
+          echo "distributionUrl=https\://services.gradle.org/distributions/gradle-7.6-bin.zip" >> ./gradle/wrapper/gradle-wrapper.properties
       - name: Setup Gradle
         script: |
           ./gradlew wrapper --gradle-version 7.6
