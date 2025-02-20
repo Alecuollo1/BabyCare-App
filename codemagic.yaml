@@ -6,10 +6,13 @@ workflows:
       vars:
         JAVA_VERSION: 17
     scripts:
-      - name: Setup Gradle
+      - name: Clean and Setup Gradle
         script: |
+          rm -rf ./gradle/wrapper
+          ./gradlew wrapper --gradle-version 7.6
           chmod +x ./gradlew
-          ./gradlew wrapper
+          chmod -R +x ./gradle/wrapper/
+          ls -la ./gradle/wrapper/
           ./gradlew dependencies
       - name: Build APK
         script: |
