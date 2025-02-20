@@ -11,8 +11,7 @@ workflows:
         script: |
           echo "Cleaning old Gradle wrapper..."
           rm -f ./gradle/wrapper/gradle-wrapper.jar
-          rm -rf ./gradle/caches/
-          rm -rf ./app/build/
+          rm -rf ~/.gradle/caches/
           echo "Pulizia completata."
 
       - name: Download Gradle Wrapper
@@ -21,9 +20,9 @@ workflows:
           ./gradlew wrapper --gradle-version 7.6
           echo "Download completato."
         
-      - name: Fix Permissions
+      - name: Fix Gradle Wrapper Permissions
         script: |
-          echo "Impostazione permessi..."
+          echo "Impostazione permessi per Gradle Wrapper..."
           chmod +x ./gradlew
           chmod +x ./gradle/wrapper/gradle-wrapper.jar
           echo "Permessi impostati correttamente."
@@ -34,29 +33,14 @@ workflows:
           ./gradlew dependencies
           echo "Configurazione completata."
 
-      - name: Build APK (Debug e Release)
+      - name: Clean and Rebuild APK
         script: |
-          echo "Avvio build APK Debug..."
-          ./gradlew assembleDebug || echo "Debug APK build failed."
-          echo "Avvio build APK Release..."
-          ./gradlew assembleRelease || echo "Release APK build failed."
+          echo "Pulizia e ricostruzione dell'APK..."
+          ./gradlew clean
+          ./gradlew assembleDebug
+          ./gradlew assembleRelease
           echo "Build APK completata."
 
-      - name: Verifica Output Debug
-        script: |
-          echo "Verifica APK Debug..."
-          ls -l ./app/build/outputs/apk/debug/ || echo "No debug APK found"
-        
-      - name: Verifica Output Release
-        script: |
-          echo "Verifica APK Release..."
-          ls -l ./app/build/outputs/apk/release/ || echo "No release APK found"
-
-      - name: List All APKs
-        script: |
-          echo "Listing all APKs in project..."
-          find . -name "*.apk" || echo "No APKs found"
-
     artifacts:
-      - "app/build/outputs/apk/debug/*.apk"
-      - "app/build/outputs/apk/release/*.apk"
+      - build/outputs/apk/debug/*.apk
+      - build/outputs/apk/release/*.apk
