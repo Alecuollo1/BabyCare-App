@@ -13,11 +13,17 @@ workflows:
           rm -rf ~/.gradle/wrapper/
           chmod +x ./gradlew
           ./gradlew clean
-          ./gradlew dependencies --refresh-dependencies
       - name: Download Fresh Gradle Wrapper
+        script: |
+          mkdir -p ./gradle/wrapper
+          curl -o ./gradle/wrapper/gradle-wrapper.jar https://services.gradle.org/distributions/gradle-7.6-bin.zip
+          unzip -d ./gradle/wrapper ./gradle/wrapper/gradle-wrapper.jar
+          chmod +x ./gradlew
+      - name: Setup Gradle
         script: |
           ./gradlew wrapper --gradle-version 7.6
           chmod +x ./gradlew
+          ./gradlew dependencies --refresh-dependencies
       - name: Build APK
         script: |
           ./gradlew assembleDebug --no-build-cache
