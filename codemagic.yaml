@@ -59,4 +59,5 @@ workflows:
     artifacts:
       - "build/artifacts/**/*.apk"
       - "app/build/outputs/**/*.apk"
+      - "**/outputs/**/*.apk"
       - "**/*.apk"
