@@ -40,5 +40,5 @@ workflows:
           ./gradlew assembleDebug
           echo "Build APK completata."
 
-     artifacts:
-  - build/**/*.apk
+    artifacts:
+      - app/build/outputs/**/*.apk
