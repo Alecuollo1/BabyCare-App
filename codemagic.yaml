@@ -37,12 +37,14 @@ workflows:
       - name: Build APK
         script: |
           echo "Avvio build APK..."
-          ./gradlew clean assembleDebug assembleRelease
+          ./gradlew assembleRelease
           echo "Build APK completata."
 
+      - name: List APKs
+        script: |
+          echo "Listing APKs..."
+          find ./app/build/outputs/ -name "*.apk"
+
     artifacts:
-      # Inclusi tutti i possibili percorsi per sicurezza
-      - app/build/outputs/apk/debug/*.apk
-      - app/build/outputs/apk/release/*.apk
-      - app/build/outputs/apk/**/*.apk
-      - app/build/outputs/**/*.apk
+      - app/build/outputs/apk/release/app-release.apk
+      - app/build/outputs/apk/debug/app-debug.apk
