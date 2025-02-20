@@ -11,7 +11,7 @@ workflows:
         script: |
           echo "Pulizia di Gradle Wrapper..."
           rm -f ./gradle/wrapper/gradle-wrapper.jar
-          rm -rf ./gradle/caches/
+          rm -rf ~/.gradle/caches/
           rm -rf ./app/build/
           echo "Pulizia completata."
 
@@ -41,24 +41,24 @@ workflows:
           ./gradlew assembleRelease
           echo "Build APK completata."
 
-      - name: Verifica File Generati
+      - name: Verifica File APK Generati
         script: |
           echo "Verifica di tutti i file APK generati..."
-          find . -name "*.apk" -print
+          find $PWD -name "*.apk" -print
           echo "Verifica completata."
 
       - name: Comprimi APK per Pubblicazione
         script: |
           echo "Comprimo tutti gli APK per la pubblicazione..."
-          mkdir -p build/artifacts/
-          find . -name "*.apk" -exec zip build/artifacts/all-apks.zip {} +
+          mkdir -p $PWD/build/artifacts/
+          find $PWD -name "*.apk" -exec zip $PWD/build/artifacts/all-apks.zip {} +
           echo "Compressione completata."
 
       - name: Verifica ZIP Creato
         script: |
           echo "Verifica del file ZIP creato..."
-          ls -la build/artifacts/
+          ls -la $PWD/build/artifacts/
           echo "Verifica completata."
 
     artifacts:
-      - build/artifacts/*.zip
+      - build/artifacts/all-apks.zip
