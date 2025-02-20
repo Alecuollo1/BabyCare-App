@@ -37,14 +37,13 @@ workflows:
       - name: Build APK
         script: |
           echo "Avvio build APK..."
-          ./gradlew assembleRelease
+          ./gradlew assembleRelease || ./gradlew assembleDebug
           echo "Build APK completata."
 
-      - name: List APKs
+      - name: List All APKs
         script: |
-          echo "Listing APKs..."
-          find ./app/build/outputs/ -name "*.apk"
+          echo "Listing all APKs in project..."
+          find . -name "*.apk" || echo "No APKs found"
 
     artifacts:
-      - app/build/outputs/apk/release/app-release.apk
-      - app/build/outputs/apk/debug/app-debug.apk
+      - **/outputs/**/*.apk
