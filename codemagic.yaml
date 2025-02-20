@@ -11,7 +11,7 @@ workflows:
         script: |
           echo "Cleaning old Gradle wrapper..."
           rm -f ./gradle/wrapper/gradle-wrapper.jar
-          rm -rf ./gradle/caches/
+          rm -rf ~/.gradle/caches/
           rm -rf ./app/build/
           echo "Pulizia completata."
 
@@ -39,6 +39,13 @@ workflows:
           echo "Avvio build APK..."
           ./gradlew assembleDebug
           echo "Build APK completata."
+          
+      - name: Copy APK to Artifacts Folder
+        script: |
+          echo "Copia dell'APK nella cartella di output..."
+          mkdir -p ./output
+          cp ./app/build/outputs/apk/debug/app-debug.apk ./output/
+          echo "APK copiato in ./output"
 
     artifacts:
-      - app/build/outputs/**/*.apk
+      - output/app-debug.apk
