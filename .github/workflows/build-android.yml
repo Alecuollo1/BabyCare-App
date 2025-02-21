@@ -27,11 +27,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Set Gradlew Permissions
+        run: chmod +x ./gradlew  # Aggiunge i permessi di esecuzione a gradlew
+
       - name: Build APK
         run: ./gradlew assembleRelease
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4  # Aggiornato a v4
+        uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
           path: app/build/outputs/apk/release/app-release.apk
