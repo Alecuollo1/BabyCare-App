@@ -12,13 +12,13 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-        
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'temurin'   # <-- Aggiunto distribution
-
+          java-version: 17
+          distribution: 'temurin'
+          
       - name: Cache Gradle Dependencies
         uses: actions/cache@v3
         with:
@@ -27,14 +27,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Set Gradlew Permissions
+      - name: Give Gradlew Permissions
         run: chmod +x ./gradlew
 
       - name: Build APK
         run: ./gradlew assembleRelease
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: app-release.apk
           path: app/build/outputs/apk/release/app-release.apk
