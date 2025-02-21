@@ -30,6 +30,13 @@ jobs:
       - name: Set Gradlew Permissions
         run: chmod +x ./gradlew  # Aggiunge i permessi di esecuzione a gradlew
 
+      - name: Download Gradle Wrapper
+        run: |
+          mkdir -p ./gradle/wrapper
+          curl -o ./gradle/wrapper/gradle-wrapper.jar https://services.gradle.org/distributions/gradle-7.6-bin.zip
+          unzip -d ./gradle/wrapper ./gradle/wrapper/gradle-wrapper.jar
+          chmod +x ./gradlew
+
       - name: Build APK
         run: ./gradlew assembleRelease
 
