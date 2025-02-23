@@ -31,7 +31,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build APK
-        run: ./gradlew assembleRelease --stacktrace --info
+        run: ./gradlew assembleRelease
 
       - name: Verifica Output della Build
         run: |
