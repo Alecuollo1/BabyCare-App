@@ -30,6 +30,10 @@ jobs:
       - name: Grant Execute Permission for Gradlew
         run: chmod +x ./gradlew
 
+      - name: Verifica Task di Gradle Disponibili
+        run: ./gradlew tasks --all
+
+
       - name: Build APK
         run: ./gradlew assembleRelease
 
