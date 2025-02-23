@@ -25,13 +25,13 @@ jobs:
       - name: Clean and Download Gradle Wrapper
         run: |
           rm -f ./gradle/wrapper/gradle-wrapper.jar
-          ./gradlew wrapper --gradle-version 8.1.1
+          ./gradlew wrapper --gradle-version 8.0
           chmod +x ./gradlew
           chmod +x ./gradle/wrapper/gradle-wrapper.jar
 
       - name: Build Release APK
         run: |
-          ./gradlew assembleRelease
+          ./gradlew clean assembleRelease
 
       - name: Verifica Output APK
         run: |
