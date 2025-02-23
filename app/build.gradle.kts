@@ -20,6 +20,12 @@ android {
     buildTypes {
         release {
             minifyEnabled(false)
+            signingConfig = signingConfigs.create("release") {
+                keyAlias = "release"
+                keyPassword = "password"
+                storeFile = file("release-key.jks")
+                storePassword = "password"
+            }
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         debug {
