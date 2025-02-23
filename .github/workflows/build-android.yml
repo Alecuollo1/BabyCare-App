@@ -36,13 +36,4 @@ jobs:
       - name: Verifica Output della Build
         run: |
           echo "Contenuto della directory di output:"
-          ls -R app/build/ || echo "Directory app/build/ non trovata"
-          ls -R app/ || echo "Directory app/ non trovata"
-          ls -R || echo "Root directory vuota"
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release.apk
-          path: app/build/outputs/apk/release/app-release.apk
-# Forzo l'aggiornamento
+          find . -type f
