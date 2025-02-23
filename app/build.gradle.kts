@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
-    kotlin("android")
+    id("kotlin-android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -13,6 +14,8 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
